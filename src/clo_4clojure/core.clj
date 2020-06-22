@@ -30,3 +30,7 @@
 
   )
 
+
+(defn pack_repeat [x]
+  (reduce #(conj %1 %2 %2) [] x)
+  )
