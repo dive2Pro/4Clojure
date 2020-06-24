@@ -50,3 +50,32 @@
       (mapcat #(repeat %1 times) arr)
     )
   )
+
+(defn my-range [low high] (
+                take (- high low) (iterate inc low)
+                            ))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
