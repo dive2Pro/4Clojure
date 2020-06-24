@@ -55,6 +55,9 @@
                 take (- high low) (iterate inc low)
                             ))
 
+(defn my-max [& s]
+  (last (sort s))
+  )
 
 
 
