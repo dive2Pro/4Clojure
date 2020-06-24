@@ -59,7 +59,13 @@
   (last (sort s))
   )
 
-
+(defn my-interleave [x-array y-array]
+  (let [largest (min (count x-array) (count y-array))]
+    (reduce (fn [p x]
+              (concat p [(nth x-array x) (nth y-array x)])
+              ) [] (range 0 largest))
+  )
+  )
 
 
 
