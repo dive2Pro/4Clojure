@@ -68,6 +68,15 @@
   )
 
 
+(defn my-interpose [x ary]
+
+    (cons (first ary)
+          (mapcat
+            (fn [y] [x y])
+            (drop 0 ary)
+            )
+          )
+  )
 
 
 
