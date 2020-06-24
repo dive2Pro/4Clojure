@@ -78,6 +78,14 @@
           )
   )
 
+; TODO
+(defn drop-every-nth [ary index ]
+  (
+    let [x -1]
+    (filter #(do (inc x) (= 0 (% x index))) ary)
+    )
+  )
+
 
 
 
