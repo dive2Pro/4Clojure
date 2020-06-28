@@ -78,13 +78,16 @@
           )
   )
 
-; TODO
-(defn drop-every-nth [ary index ]
-  (
-    let [x -1]
-    (filter #(do (inc x) (= 0 (% x index))) ary)
-    )
+(defn drop-every-nth [prop-ary ind]
+  ;(
+  ;  let [x -1]
+  ;  (filter #(do (inc x) (= 0 (% x index))) ary)
+  ;  )
+  ( (fn [ary index] (reduce #(concat %1 %2) [] (partition (- index 1)  index [] ary) ))
+  prop-ary ind
+   )
   )
+
 
 
 
