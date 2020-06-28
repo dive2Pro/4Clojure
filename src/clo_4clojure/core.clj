@@ -79,14 +79,17 @@
   )
 
 (defn drop-every-nth [prop-ary ind]
-  ;(
-  ;  let [x -1]
-  ;  (filter #(do (inc x) (= 0 (% x index))) ary)
-  ;  )
   ( (fn [ary index] (reduce #(concat %1 %2) [] (partition (- index 1)  index [] ary) ))
   prop-ary ind
    )
   )
+
+ (defn factorial [num]
+   (
+    (fn fac [total n] (if (= n 0) total (fac (* total n ) (- n 1))) )
+    1 num
+     )
+   )
 
 
 
