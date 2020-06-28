@@ -47,13 +47,13 @@
   (let [repeat (fn [val count]
                  (map (fn [_v] val) (range count))
                  )]
-      (mapcat #(repeat %1 times) arr)
+    (mapcat #(repeat %1 times) arr)
     )
   )
 
 (defn my-range [low high] (
-                take (- high low) (iterate inc low)
-                            ))
+                            take (- high low) (iterate inc low)
+                                 ))
 
 (defn my-max [& s]
   (last (sort s))
@@ -64,32 +64,64 @@
     (reduce (fn [p x]
               (concat p [(nth x-array x) (nth y-array x)])
               ) [] (range 0 largest))
-  )
+    )
   )
 
 
 (defn my-interpose [x ary]
 
-    (cons (first ary)
-          (mapcat
-            (fn [y] [x y])
-            (drop 0 ary)
-            )
+  (cons (first ary)
+        (mapcat
+          (fn [y] [x y])
+          (drop 0 ary)
           )
+        )
   )
 
 (defn drop-every-nth [prop-ary ind]
-  ( (fn [ary index] (reduce #(concat %1 %2) [] (partition (- index 1)  index [] ary) ))
-  prop-ary ind
+  ((fn [ary index] (reduce #(concat %1 %2) [] (partition (- index 1) index [] ary)))
+   prop-ary ind
    )
   )
 
- (defn factorial [num]
-   (
-    (fn fac [total n] (if (= n 0) total (fac (* total n ) (- n 1))) )
-    1 num
-     )
+(defn factorial [num]
+  (
+   (fn fac [total n] (if (= n 0) total (fac (* total n) (- n 1))))
+   1 num
    )
+  )
+
+
+; 把 nums 分为 n 份
+; 每一份中的数字间隔 n
+;
+; 以 n 个 array 组成一个集合
+; 遍历 nums, 根据 当前的 index % n 的结果
+; 将 nums[index] 放入该位置处的 array
+; BUG: 只能更新单个item, 而且由于原子性, 这些修改不会影响到原来的 num-array
+(defn reverse-interleave-failure [nums n]
+  (let [num-array (map (fn [_a] []) (make-array Boolean/TYPE n))]
+    (
+      map-indexed (fn [i v]
+                    (
+                      assoc (nth num-array i) (count (nth num-array i)) v)
+                    )
+                  ) nums
+    )
+  )
+
+; 如何把  map-indexed 和 reduce 进行结合呢?
+(defn reverse-interleave [nums n]
+  (
+    (let [i (volatile! -1)]
+        (reduce (fn [p q] (do (vswap! i inc)
+                              (println i)
+                        (assoc-in p [i  (count (nth p i))]  q) )
+                        )
+          (map (fn [_a] []) (make-array Boolean/TYPE n)) nums)
+      )
+    )
+  )
 
 
 
