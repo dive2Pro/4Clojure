@@ -111,7 +111,7 @@
   )
 
 ; 如何把  map-indexed 和 reduce 进行结合呢?
-(defn reverse-interleave [nums n]
+(defn reverse-interleave-use-volatile [nums n]
     (let [i (volatile! -1)]
         (reduce (fn [p q] (do (vswap! i inc)
                               (println p (deref i) (count (nth p (mod (deref i) n))) q)
@@ -121,6 +121,14 @@
       )
   )
 
+
+(defn reverse-interleave [nums n]
+    (reduce (fn [p q]
+              (assoc-in p [ (mod (get q 0) n) (count (nth p (mod (get q 0) n)))]  (get q 1)) )
+            (mapv (fn [_a] []) (make-array Boolean/TYPE n))
+            (map-indexed (fn [i v] [i v]) nums)
+            )
+  )
 
 
 
