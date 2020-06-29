@@ -131,6 +131,13 @@
   )
 
 
+(defn exc [coll n]
+  (let [exc-pos (mod n (count coll))]
+    (concat (drop exc-pos coll) (take exc-pos coll))
+    )
+  )
+
+
 
 
 
