@@ -137,8 +137,43 @@
     )
   )
 
+; split a sequence
+(defn split-sequence [n coll] (
+                             list (take n coll)
+                                    (drop n coll)
+                                ))
 
 
+; split by type
+
+(defn split-by-type [coll]
+  (vals (group-by type coll) )
+  )
+
+;(let [[a b & c :as d] [1 2 3 4 5]] [ a b c d])
+;(+ (first (last p)) 1)
+(defn longest-increasing-seq [coll]
+  (let [
+        v
+        (
+          reduce (fn [p q]
+                   (if
+                     (empty? (last p) )
+                     [[q] [q]]
+                     (if (< (last (last p)) q)
+                       [(first p) (conj (last p) q)]
+                       (if (< (count (first p)) (count (last p)))
+                         [(last p) [q]]
+                         [(first p) [q]]
+                         )
+                       )
+                     )
+                   ) [[] []] coll
+                 )
+        ]
+    (take-nth (>) v)
+    )
+  )
 
 
 
