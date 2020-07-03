@@ -177,6 +177,33 @@
     )
   )
 
+(defn r-demo [coll]
+  (->> (map vector coll (range))
+       (partition-by #(apply - %))
+       (map #(map first %))
+       (filter #(> (count %) 1))
+       (sort-by (comp - count))
+       first
+       vec)
+  )
+
+(defn my-partition [n coll ]
+(
+  (fn dep-process [result n-coll]
+      (if (< (count n-coll) n)
+          result
+          (dep-process (
+                         conj
+                         result
+                         (take n n-coll)
+                         ) (drop n n-coll))
+        )
+    )
+ []
+ coll
+ )
+)
+
 
 
 
