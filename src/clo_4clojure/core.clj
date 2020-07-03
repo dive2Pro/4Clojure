@@ -257,6 +257,11 @@
             ) fns)
   )
 
+(defn my-juxt [& fns]
+  (fn [& args]
+    (for [f fns] ( apply f args ))
+    )
+  )
 
 
 
