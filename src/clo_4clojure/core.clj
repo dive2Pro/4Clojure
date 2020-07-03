@@ -212,8 +212,13 @@
   )
 
 
-
-
+(defn my-distinct [coll]
+  (map #(first %)
+       (reduce
+         (fn [p q] (assoc p q 1))
+         (hash-map) coll)
+       )
+  )
 
 
 
