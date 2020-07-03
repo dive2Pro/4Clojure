@@ -171,7 +171,9 @@
                    ) [[] []] coll
                  )
         ]
-    (take-nth (>) v)
+    (let [i (nth v  (if (< (count (first v)) (count (second v))) 1 0))]
+        (if (< (count i) 2) [] i)
+      )
     )
   )
 
