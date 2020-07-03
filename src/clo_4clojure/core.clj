@@ -205,6 +205,15 @@
 )
 
 
+(defn my-frequencies [coll]
+  (reduce (fn [p q]
+            (assoc p q  (+ 1 (if (number? (get p q)) (get p q) 0)))
+            ) (hash-map) coll)
+  )
+
+
+
+
 
 
 
