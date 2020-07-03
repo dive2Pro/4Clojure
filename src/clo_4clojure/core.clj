@@ -224,19 +224,37 @@
                       fn [& args]
                         (
                           reduce
-                          (fn [pfn q] (do
-                                        (if (and
-                                              (counted? pfn)
-                                              (> (count pfn) 1)
-                                              )
-                                          (apply q pfn)
-                                          (q pfn)
-                                          )
-                                        ))
-                          args
-                          (reverse fns)
+                          (fn [pfn q] (q pfn))
+
+                          (if  (= (count args) 1)
+                                (first args)
+                                args
+                                )
+                          (reverse
+                            (if
+                              (> (count args) 1)
+                              (update-in (into [] fns) [(- (count fns) 1)] (fn [v] (fn [_v] (apply v _v))))
+                              fns
+                              )
+                            )
                           )
-                      )
+                      ))
+
+(defn other-comp [& fns]
+  (fn [& args]
+    (first
+      (reduce (fn [arg f]
+                (list ( apply f arg ))
+                ) args (reverse fns))
+      )
+    )
+  )
+
+
+(defn other-comp-no-reverse [& fns]
+  (reduce (fn [p g]
+            #(p (apply g %&))
+            ) fns)
   )
 
 
