@@ -220,6 +220,25 @@
        )
   )
 
+(defn my-comp [& fns] (
+                      fn [& args]
+                        (
+                          reduce
+                          (fn [pfn q] (do
+                                        (if (and
+                                              (counted? pfn)
+                                              (> (count pfn) 1)
+                                              )
+                                          (apply q pfn)
+                                          (q pfn)
+                                          )
+                                        ))
+                          args
+                          (reverse fns)
+                          )
+                      )
+  )
+
 
 
 
