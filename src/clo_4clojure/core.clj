@@ -285,3 +285,31 @@
   (lazy-seq (cons x (my-iterate func (func x))))
 
   )
+
+(defn my-group-by [func coll]
+  (reduce
+    (fn [p c]
+      (assoc p (func c) (concat (get p (func c)) [c]))
+      )
+
+    (hash-map) coll)
+
+  )
+
+(defn my-type [x] (
+                    cond
+                    (= (conj x {}) x ) :map
+                    (empty? x) (cond
+                                 (= (clojure.set/union x #{}) #{} ) :set
+                                 (= (conj (conj x 0) 1) [0 1]) :vector
+                                 :else  :list
+                                 )
+
+                    (= (clojure.set/union x x) x ) :set
+                    (= (first (conj x x)) x) :list
+                    :else :vector
+                    )
+
+  )
+
+
