@@ -263,16 +263,25 @@
     )
   )
 
+(defn my-reduction
+                    [func & args ]
+  (let [result (func (first args))]
+    )
+  )
+
+(defn my-lazy [] (lazy-seq (cons (str 1) (my-lazy))))
+
+(defn my-zipmap [arr1 arr2]
+    (
+     into
+      (array-map)
+      (map vector arr1 arr2)
+      )
+
+  )
 
 
+(defn my-iterate [func x]
+  (lazy-seq (cons x (my-iterate func (func x))))
 
-
-
-
-
-
-
-
-
-
-
+  )
