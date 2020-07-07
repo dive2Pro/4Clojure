@@ -312,4 +312,69 @@
 
   )
 
+(defn my-gcd [a b]
+  (if (zero? b) a
+                (my-gcd b (mod a b))
+                )
+  )
 
+(defn is-prime2 [x v max]
+  (if (<= x max)
+                (if
+                  (= (mod v x) 0)
+                  false
+                  (is-prime2 (inc x) v max)
+                )
+                true
+  )
+)
+
+
+(defn is-prime [x]
+  (is-prime2 2 x (Math/sqrt x))
+  )
+
+(defn gene-prime-from [x]
+  (if (is-prime x) x (gene-prime-from (inc x)))
+  )
+
+(defn my-gene-prime-numbs [size]
+  (cond (zero? size) []
+        (= 1 size) [2]
+        (< 1 size)
+          (reduce (fn [p c]
+                  (conj p
+                        ; 🔥 计算 prime
+                        (gene-prime-from (+ (last p) 1))
+                        )
+                  ) [2] (range (- size 1)))
+    )
+  )
+
+(defn my-gpn  [size]
+  (letfn [
+           (is-p2 [x v max]
+             (if (<= x max)
+               (if
+                 (= (mod v x) 0)
+                 false
+                 (is-p2 (inc x) v max)
+                 )
+               true
+               )
+             )
+           (is-p [x] (is-p2 2 x (Math/sqrt x)))
+           (gpf [x] (if (is-p x) x (gpf (inc x))))
+           ]
+     (cond (zero? size) []
+           (= 1 size) [2]
+           (< 1 size)
+           (reduce (fn [p c]
+                     (conj p
+                           (gpf (+ (last p) 1))
+                           )
+                     ) [2] (range (- size 1)))
+           )
+     )
+
+  )
