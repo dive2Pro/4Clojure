@@ -1,4 +1,5 @@
 (ns clo-4clojure.core)
+(require 'clojure.set)
 
 (defn foo
   "I don't do a whole lot."
@@ -304,13 +305,11 @@
                                  (= (conj (conj x 0) 1) [0 1]) :vector
                                  :else  :list
                                  )
-
                     (= (clojure.set/union x x) x ) :set
                     (= (first (conj x x)) x) :list
                     :else :vector
                     )
-
-  )
+ )
 
 (defn my-gcd [a b]
   (if (zero? b) a
@@ -378,3 +377,28 @@
      )
 
   )
+
+(defn my-merge-with [f & args]
+  (reduce
+    ; c 为 {} 对象
+    (fn [p c]
+      (reduce
+        (fn [ip ikey]
+            (assoc
+              ip
+              ikey
+              (if
+                (get ip ikey)
+                (f (get ip ikey) (get c ikey))
+                (get c ikey)
+                )
+              )
+          )
+        p
+        (keys c)
+        )
+      )
+    (hash-map) args)
+
+  )
+
