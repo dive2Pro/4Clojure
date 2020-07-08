@@ -114,22 +114,22 @@
 
 ; 如何把  map-indexed 和 reduce 进行结合呢?
 (defn reverse-interleave-use-volatile [nums n]
-    (let [i (volatile! -1)]
-        (reduce (fn [p q] (do (vswap! i inc)
-                              (println p (deref i) (count (nth p (mod (deref i) n))) q)
-                        (assoc-in p [ (mod (deref i) n) (count (nth p (mod (deref i) n)))]  q) )
-                        )
-          (mapv (fn [_a] []) (make-array Boolean/TYPE n)) nums)
-      )
+  (let [i (volatile! -1)]
+    (reduce (fn [p q] (do (vswap! i inc)
+                          (println p (deref i) (count (nth p (mod (deref i) n))) q)
+                          (assoc-in p [(mod (deref i) n) (count (nth p (mod (deref i) n)))] q))
+              )
+            (mapv (fn [_a] []) (make-array Boolean/TYPE n)) nums)
+    )
   )
 
 
 (defn reverse-interleave [nums n]
-    (reduce (fn [p q]
-              (assoc-in p [ (mod (get q 0) n) (count (nth p (mod (get q 0) n)))]  (get q 1)) )
-            (mapv (fn [_a] []) (make-array Boolean/TYPE n))
-            (map-indexed (fn [i v] [i v]) nums)
-            )
+  (reduce (fn [p q]
+            (assoc-in p [(mod (get q 0) n) (count (nth p (mod (get q 0) n)))] (get q 1)))
+          (mapv (fn [_a] []) (make-array Boolean/TYPE n))
+          (map-indexed (fn [i v] [i v]) nums)
+          )
   )
 
 
@@ -141,15 +141,15 @@
 
 ; split a sequence
 (defn split-sequence [n coll] (
-                             list (take n coll)
-                                    (drop n coll)
-                                ))
+                                list (take n coll)
+                                     (drop n coll)
+                                     ))
 
 
 ; split by type
 
 (defn split-by-type [coll]
-  (vals (group-by type coll) )
+  (vals (group-by type coll))
   )
 
 ;(let [[a b & c :as d] [1 2 3 4 5]] [ a b c d])
@@ -160,7 +160,7 @@
         (
           reduce (fn [p q]
                    (if
-                     (empty? (last p) )
+                     (empty? (last p))
                      [[q] [q]]
                      (if (< (last (last p)) q)
                        [(first p) (conj (last p) q)]
@@ -173,8 +173,8 @@
                    ) [[] []] coll
                  )
         ]
-    (let [i (nth v  (if (< (count (first v)) (count (second v))) 1 0))]
-        (if (< (count i) 2) [] i)
+    (let [i (nth v (if (< (count (first v)) (count (second v))) 1 0))]
+      (if (< (count i) 2) [] i)
       )
     )
   )
@@ -189,27 +189,27 @@
        vec)
   )
 
-(defn my-partition [n coll ]
-(
-  (fn dep-process [result n-coll]
-      (if (< (count n-coll) n)
-          result
-          (dep-process (
-                         conj
-                         result
-                         (take n n-coll)
-                         ) (drop n n-coll))
-        )
-    )
- []
- coll
- )
-)
+(defn my-partition [n coll]
+  (
+   (fn dep-process [result n-coll]
+     (if (< (count n-coll) n)
+       result
+       (dep-process (
+                      conj
+                      result
+                      (take n n-coll)
+                      ) (drop n n-coll))
+       )
+     )
+   []
+   coll
+   )
+  )
 
 
 (defn my-frequencies [coll]
   (reduce (fn [p q]
-            (assoc p q  (+ 1 (if (number? (get p q)) (get p q) 0)))
+            (assoc p q (+ 1 (if (number? (get p q)) (get p q) 0)))
             ) (hash-map) coll)
   )
 
@@ -223,15 +223,15 @@
   )
 
 (defn my-comp [& fns] (
-                      fn [& args]
+                        fn [& args]
                         (
                           reduce
                           (fn [pfn q] (q pfn))
 
-                          (if  (= (count args) 1)
-                                (first args)
-                                args
-                                )
+                          (if (= (count args) 1)
+                            (first args)
+                            args
+                            )
                           (reverse
                             (if
                               (> (count args) 1)
@@ -240,13 +240,13 @@
                               )
                             )
                           )
-                      ))
+                        ))
 
 (defn other-comp [& fns]
   (fn [& args]
     (first
       (reduce (fn [arg f]
-                (list ( apply f arg ))
+                (list (apply f arg))
                 ) args (reverse fns))
       )
     )
@@ -261,12 +261,12 @@
 
 (defn my-juxt [& fns]
   (fn [& args]
-    (for [f fns] ( apply f args ))
+    (for [f fns] (apply f args))
     )
   )
 
 (defn my-reduction
-                    [func & args ]
+  [func & args]
   (let [result (func (first args))]
     )
   )
@@ -274,11 +274,11 @@
 (defn my-lazy [] (lazy-seq (cons (str 1) (my-lazy))))
 
 (defn my-zipmap [arr1 arr2]
-    (
-     into
-      (array-map)
-      (map vector arr1 arr2)
-      )
+  (
+    into
+    (array-map)
+    (map vector arr1 arr2)
+    )
 
   )
 
@@ -300,17 +300,17 @@
 
 (defn my-type [x] (
                     cond
-                    (= (conj x {}) x ) :map
+                    (= (conj x {}) x) :map
                     (empty? x) (cond
-                                 (= (clojure.set/union x #{}) #{} ) :set
+                                 (= (clojure.set/union x #{}) #{}) :set
                                  (= (conj (conj x 0) 1) [0 1]) :vector
-                                 :else  :list
+                                 :else :list
                                  )
-                    (= (clojure.set/union x x) x ) :set
+                    (= (clojure.set/union x x) x) :set
                     (= (first (conj x x)) x) :list
                     :else :vector
                     )
- )
+  )
 
 (defn my-gcd [a b]
   (if (zero? b) a
@@ -320,14 +320,14 @@
 
 (defn is-prime2 [x v max]
   (if (<= x max)
-                (if
-                  (= (mod v x) 0)
-                  false
-                  (is-prime2 (inc x) v max)
-                )
-                true
+    (if
+      (= (mod v x) 0)
+      false
+      (is-prime2 (inc x) v max)
+      )
+    true
+    )
   )
-)
 
 
 (defn is-prime [x]
@@ -342,40 +342,40 @@
   (cond (zero? size) []
         (= 1 size) [2]
         (< 1 size)
-          (reduce (fn [p c]
+        (reduce (fn [p c]
                   (conj p
                         ; 🔥 计算 prime
                         (gene-prime-from (+ (last p) 1))
                         )
                   ) [2] (range (- size 1)))
-    )
+        )
   )
 
-(defn my-gpn  [size]
+(defn my-gpn [size]
   (letfn [
-           (is-p2 [x v max]
-             (if (<= x max)
-               (if
-                 (= (mod v x) 0)
-                 false
-                 (is-p2 (inc x) v max)
-                 )
-               true
-               )
-             )
-           (is-p [x] (is-p2 2 x (Math/sqrt x)))
-           (gpf [x] (if (is-p x) x (gpf (inc x))))
-           ]
-     (cond (zero? size) []
-           (= 1 size) [2]
-           (< 1 size)
-           (reduce (fn [p c]
-                     (conj p
-                           (gpf (+ (last p) 1))
-                           )
-                     ) [2] (range (- size 1)))
-           )
-     )
+          (is-p2 [x v max]
+            (if (<= x max)
+              (if
+                (= (mod v x) 0)
+                false
+                (is-p2 (inc x) v max)
+                )
+              true
+              )
+            )
+          (is-p [x] (is-p2 2 x (Math/sqrt x)))
+          (gpf [x] (if (is-p x) x (gpf (inc x))))
+          ]
+    (cond (zero? size) []
+          (= 1 size) [2]
+          (< 1 size)
+          (reduce (fn [p c]
+                    (conj p
+                          (gpf (+ (last p) 1))
+                          )
+                    ) [2] (range (- size 1)))
+          )
+    )
 
   )
 
@@ -385,15 +385,15 @@
     (fn [p c]
       (reduce
         (fn [ip ikey]
-            (assoc
-              ip
-              ikey
-              (if
-                (get ip ikey)
-                (f (get ip ikey) (get c ikey))
-                (get c ikey)
-                )
+          (assoc
+            ip
+            ikey
+            (if
+              (get ip ikey)
+              (f (get ip ikey) (get c ikey))
+              (get c ikey)
               )
+            )
           )
         p
         (keys c)
@@ -407,19 +407,19 @@
 
 (defn my-split-sort-str [s]
   (sort
-  #(compare (clojure.string/lower-case %1)
-            (clojure.string/lower-case %2)
-            )
-  (filter
-#(
-   not
-   (
-     = % ""
-     )
-   )
-   (str/split s #"[^a-zA-Z]")
+    #(compare (clojure.string/lower-case %1)
+              (clojure.string/lower-case %2)
+              )
+    (filter
+      #(
+         not
+         (
+           = % ""
+             )
+         )
+      (str/split s #"[^a-zA-Z]")
+      )
     )
-  )
   )
 
 
@@ -444,42 +444,45 @@
 (defn my-split-skip [s]
   (subs
 
-  (reduce str ""
-    (map #(str "," %)
-      (filter
-          (fn [x]
-            (let [r (Math/sqrt (Integer/parseInt x)) ]
-                 (= (Math/ceil r) r)
-              )
+    (reduce str ""
+            (map #(str "," %)
+                 (filter
+                   (fn [x]
+                     (let [r (Math/sqrt (Integer/parseInt x))]
+                       (= (Math/ceil r) r)
+                       )
+                     )
+                   (clojure.string/split s #",")
+                   )
+                 )
             )
-          (clojure.string/split s #",")
-        )
-      )
+    1
     )
-  1
-  )
   )
 
 (defn calc-co-prime [n]
   (letfn [(
 
-           gcd [a b]
-             (if (zero? b) a
-                           (gcd b (mod a b))
-                           )
+            gcd [a b]
+            (if (zero? b) a
+                          (gcd b (mod a b))
+                          )
             )]
     (count
       (filter int?
-                  (for [ x (range 1 n) ]
-                    (if (= (gcd x n) 1)
-                      x
-                      nil
-                      )
-                    )
-          )
+              (for [x (range 1 n)]
+                (if (= (gcd x n) 1) x
+                                    nil
+                                    )
+                )
+              )
       )
     )
   )
+
+
+
+
 
 
 
