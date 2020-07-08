@@ -460,6 +460,27 @@
   )
   )
 
+(defn calc-co-prime [n]
+  (letfn [(
+
+           gcd [a b]
+             (if (zero? b) a
+                           (gcd b (mod a b))
+                           )
+            )]
+    (count
+      (filter int?
+                  (for [ x (range 1 n) ]
+                    (if (= (gcd x n) 1)
+                      x
+                      nil
+                      )
+                    )
+          )
+      )
+    )
+  )
+
 
 
 
