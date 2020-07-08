@@ -1,4 +1,5 @@
-(ns clo-4clojure.core)
+(ns clo-4clojure.core
+  (:require [clojure.string :as str]))
 (require 'clojure.set)
 
 (defn foo
@@ -401,4 +402,48 @@
     (hash-map) args)
 
   )
+
+
+
+(defn my-split-sort-str [s]
+  (sort
+  #(compare (clojure.string/lower-case %1)
+            (clojure.string/lower-case %2)
+            )
+  (filter
+#(
+   not
+   (
+     = % ""
+     )
+   )
+   (str/split s #"[^a-zA-Z]")
+    )
+  )
+  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
