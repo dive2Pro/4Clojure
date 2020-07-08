@@ -423,6 +423,43 @@
   )
 
 
+; TODO
+(defn my-tic-tac-toe-analyze
+  "board =
+   [
+    [:o :e :x]
+    [:e :o :x]
+    [:o :e :x]
+   ]
+   :e    -> empty
+   :x,:o -> player
+   find out who's winner
+   if not one was win, then return nil
+   if neither player has won, return nil
+   "
+  [board]
+
+  )
+
+(defn my-split-skip [s]
+  (subs
+
+  (reduce str ""
+    (map #(str "," %)
+      (filter
+          (fn [x]
+            (let [r (Math/sqrt (Integer/parseInt x)) ]
+                 (= (Math/ceil r) r)
+              )
+            )
+          (clojure.string/split s #",")
+        )
+      )
+    )
+  1
+  )
+  )
+
 
 
 
