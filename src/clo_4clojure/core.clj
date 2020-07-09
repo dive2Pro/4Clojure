@@ -511,7 +511,14 @@
   )
 
 
-
+(defn my-trampoline [f & args]
+  (loop [i (apply f args)]
+    (if (not (fn? i))
+      i
+      (recur (i))
+      )
+      )
+  )
 
 
 
