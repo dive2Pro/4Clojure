@@ -520,6 +520,53 @@
       )
   )
 
+(defn Triangle-Minimal-Path
+  "
+  从顶到底找到一条最短（值最少）的路径
+  只能找上下相邻的
+
+   '([1] a
+    [2 4] b c
+   [5 4 1] d e f
+  [1 5 3 2]) g h i j
+  : 1-> 4 -> 1 -> 4
+  keywords: 贪心算法
+  要穷举？
+  Dijkstra 算法
+  "
+  [triangle-path]
+  ; + HIGHLIGHT 找到相邻关系
+  ; 跟 index 相关
+  ; 上层和下层的关系： top-index 低一层的 [top-index, top-index + 1]
+
+  ; TODO 合适的数据结构
+  ; 回溯
+  ; 记录路径
+  ;
+  ; 路径的数据结构
+  ; pathTo = {a: [b c] b : [ d e]  c: [ e :f] }
+  ; weight = triangle-path[level_index - column_index]
+  ; ["1-1"] = a
+  ;   [level_index - column_index]
+  ; 从 a 点开始算
+  ; ds = {b: 3 , c : 5, [d,e,f,g,h,i,j]: Max}
+  ;
+  ; TODO 如何结尾？ pathTo[key] = nil 的时候
+  ; TODO 入栈
+  ;     0. pathTo[a] = [b c]
+  ;     1. 算出 b c 两点在 ds 中最小的数 -> b
+  ;     2. b 可以到 [d e]
+  ;     3. 计算
+  ;         ds[d] = ds[b] + weight[d]
+  ;         ds[e] = ds[b] + weight[e]
+  ;     4. pathTo[a] = [d e c]
+  ;        回到 1
+  ; (map-indexed )
+
+  ; TODO 路径记录
+
+  )
+
 
 
 
