@@ -480,6 +480,36 @@
     )
   )
 
+(defn group-by-same-words [s-v]
+  ((comp
+     ;#(apply clojure.set/union %)
+     #(map (fn [v] (if (= 1 (count v)) nil (set v))) %) vals)
+   (group-by
+     #(
+        sort
+        (
+          clojure.string/split % #""
+                               )
+        )
+     s-v)
+   )
+  )
+
+(defn anagram-finder [s-v]
+  (set
+    (map set
+
+         (filter #(< 1 (count %))
+                 (vals
+                   (group-by (fn [v]
+                               (sort (clojure.string/split v #""))
+                               ) s-v)
+                   )
+                 )
+         )
+    )
+  )
+
 
 
 
