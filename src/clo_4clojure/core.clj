@@ -517,7 +517,7 @@
       i
       (recur (i))
       )
-      )
+    )
   )
 
 (defn Triangle-Minimal-Path
@@ -535,24 +535,53 @@
   Dijkstra 算法
   "
   [triangle-path]
-  ; + HIGHLIGHT 找到相邻关系
+  ;+ HIGHLIGHT 找到相邻关系
   ; 跟 index 相关
   ; 上层和下层的关系： top-index 低一层的 [top-index, top-index + 1]
+  ;+
+  (
+    let [
+         ds (hash-map)
+         ; [[v inner-i] outer-i]
+         ; map (fn ) (str outer-i "-" inner-i)
+         ;
+         weight (hash-map)
+         ; weight = #{key1 v1 key v2}
+         pathTo
+         ;(apply conj
+         ;         (flatten
+         (map-indexed (fn [o-i v]
+                        (map-indexed (fn [in-i in-v]
+                                       (hash-map
+                                         (str o-i "-" in-i)
+                                         in-v
+                                         )
+                                       ) v)
+                        )
+                      triangle-path)
+         ;)
 
+
+         ;)
+
+         ]
+    ;(into hash-map (flatten pathTo))
+    pathTo
+    )
   ; TODO 合适的数据结构
   ; 回溯
   ; 记录路径
   ;
   ; 路径的数据结构
-  ; pathTo = {a: [b c] b : [ d e]  c: [ e :f] }
+  ; pathTo = {a: [b c] b : [d e]  c: [ e :f] }
   ; weight = triangle-path[level_index - column_index]
   ; ["1-1"] = a
   ;   [level_index - column_index]
   ; 从 a 点开始算
   ; ds = {b: 3 , c : 5, [d,e,f,g,h,i,j]: Max}
   ;
-  ; TODO 如何结尾？ pathTo[key] = nil 的时候
-  ; TODO 入栈
+  ; 如何结尾？ pathTo[key] = nil 的时候
+  ; 入栈
   ;     0. pathTo[a] = [b c]
   ;     1. 算出 b c 两点在 ds 中最小的数 -> b
   ;     2. b 可以到 [d e]
